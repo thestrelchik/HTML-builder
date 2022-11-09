@@ -12,13 +12,6 @@ const pathToFile = path.join('02-write-file', 'text.txt')
 const fileText = fs.createWriteStream(pathToFile)
 
 
-process.on('SIGINT', () => {
-  if (key && key.ctrl && key.name === 'c') {
-    console.log('Пока, удачи');
-    rl.close()
-  }
-})
-
 function write() {
 
   rl.question('введите текст: ', text => {
@@ -28,6 +21,7 @@ function write() {
       rl.close()
       return
     }
+    
     fileText.write(text + '\n', err => {
       if (err) {
         console.log(err.message);
@@ -35,7 +29,10 @@ function write() {
         write()
       }
     })
+    process.on('exit', () => {
+      console.log('Пока, удачи');
+      rl.close()
+    });
   })
-
 }
 write()
